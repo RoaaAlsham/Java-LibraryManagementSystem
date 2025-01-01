@@ -6,7 +6,7 @@ o Borrowed Books (Array of Book objects). A user can’t borrow more than 3 book
 package com.fsmvu.librarymanagementsistem;
 
 public class User {
-    private String Name;
+    //private String Name;
     private String Email;
     private Book[] usersBooks= new Book[3];
     
