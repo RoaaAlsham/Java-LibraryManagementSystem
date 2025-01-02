@@ -6,10 +6,15 @@ o Borrowed Books (Array of Book objects). A user can’t borrow more than 3 book
 package com.fsmvu.librarymanagementsistem;
 
 public class User {
-    //private String Name;
+    private String Name;
     private String Email;
     private Book[] usersBooks= new Book[3];
     
+    User(String Name, String Email){
+        this.Name= Name;
+        this.Email=Email;
+    }
+    User(){}
     public void setName(String Name) {
         this.Name = Name;
     }
@@ -23,7 +28,7 @@ public class User {
         this.Email = Email;
     }
     
-    private boolean canUserBorrowMore(){//check if the user exceeded the limit
+    public boolean canUserBorrowMore(){//check if the user exceeded the limit
         int count=0;
         for(int i=0; i<usersBooks.length; i++){
             if(usersBooks[i]!= null)

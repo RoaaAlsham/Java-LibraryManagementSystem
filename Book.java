@@ -19,6 +19,7 @@ public class Book {
         this.Title=Title;
         this.Author=Author;
         this.AvailableCopies= AvailableCopies;
+        TotalCopies+=AvailableCopies;
     }
     //Since private data can not be accessed directly we use set and get methods
     // use this keyword to differentiate between the data fields and parameters
@@ -45,6 +46,8 @@ public class Book {
     public int getAvailableCopies(){
         return AvailableCopies;
     }
+    
+    
     
 }
 

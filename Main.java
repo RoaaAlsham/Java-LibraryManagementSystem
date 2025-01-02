@@ -15,7 +15,9 @@ public class Main {
     public static void main(String[] args) {
         Library.addNewBook();
         Library.addNewBook();
-        //Library.displayShelves();
+        Library.registerNewUser();
+        Library.displayShelves();
+        
     }
     
 }
