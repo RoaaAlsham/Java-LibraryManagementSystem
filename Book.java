@@ -43,6 +43,10 @@ public class Book {
         AvailableCopies+=numberOfNewCopies;
         TotalCopies+=numberOfNewCopies;
     }
+    public void decreaseAvailableCopiesNummByOne(){
+        AvailableCopies--;
+        TotalCopies--;
+    }
     public int getAvailableCopies(){
         return AvailableCopies;
     }

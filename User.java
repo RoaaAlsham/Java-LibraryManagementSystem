@@ -8,7 +8,7 @@ package com.fsmvu.librarymanagementsistem;
 public class User {
     private String Name;
     private String Email;
-    private Book[] usersBooks= new Book[3];
+    private Book[] userBooks= new Book[3];
     
     User(String Name, String Email){
         this.Name= Name;
@@ -30,14 +30,16 @@ public class User {
     
     public boolean canUserBorrowMore(){//check if the user exceeded the limit
         int count=0;
-        for(int i=0; i<usersBooks.length; i++){
-            if(usersBooks[i]!= null)
+        for(int i=0; i<userBooks.length; i++){
+            if(userBooks[i]!= null)
                 count++;
         }
         if(count<3)
             return true;
         return false;    
     }
-    
+    public Book[] getUserBookList(){
+        return userBooks;
+    }
     
 }

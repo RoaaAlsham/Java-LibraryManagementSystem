@@ -13,10 +13,12 @@ package com.fsmvu.librarymanagementsistem;
 public class Main {
     
     public static void main(String[] args) {
-        Library.addNewBook();
-        Library.addNewBook();
-        Library.registerNewUser();
-        Library.displayShelves();
+        Library library =new Library();
+        library.addNewBook();
+        library.addNewBook();
+        library.registerNewUser();
+        library.registerNewUser();
+        library.displayShelves();
         
     }
     
