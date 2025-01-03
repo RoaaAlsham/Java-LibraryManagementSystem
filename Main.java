@@ -22,7 +22,7 @@ public class Main {
         library.borrowBook();
         System.out.println("////");
         
-        library.displayShelves();
+        Book.displayShelves();
         System.out.println("////");
         Transaction.displayTransaction();
     }

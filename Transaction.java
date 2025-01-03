@@ -13,14 +13,15 @@ public class Transaction {
     Book book =new Book();
     private String TransactionType;
     java.util.Date date= new java.util.Date();
-    String TransactionDate=date.toString();
+    
     
     Transaction(){}
     
-    Transaction(Book book, User user, String TransactionType){//transaction contructor
+    Transaction(Book book, User user, String TransactionType, java.util.Date currentDate){//transaction contructor
         this.book= book;
         this.user=user;
-        this.TransactionType=TransactionType; 
+        this.TransactionType=TransactionType;
+        date=currentDate;
     }
     
     static Transaction[] transactionRecords= new Transaction[defaultCapacity];
@@ -36,7 +37,7 @@ public class Transaction {
         boolean isAdded=false;
         while(!isAdded){
             for(int i=0; i<transactionRecords.length; i++){
-                if(transactionRecords[i]!=null){
+                if(transactionRecords[i]==null){
                     transactionRecords[i]=transaction;
                     isAdded=true;
                     System.out.println("transaction add to the transaction records list");
@@ -54,9 +55,9 @@ public class Transaction {
                 String bookTitle= transactionRecords[i].book.getTitle();
                 String userName= transactionRecords[i].user.getName();
                 String transactionType=transactionRecords[i].TransactionType;
-                String transactionDate=transactionRecords[i].TransactionDate;
-                System.out.printf("\nThe book %s %s by %s at the following date:\n %s "
-                ,bookTitle,userName, transactionType,transactionDate);
+                String transactionDate=transactionRecords[i].date.toString();
+                System.out.printf("\nThe book '%s' is %s by '%s' at the following date:\n %s "
+                ,bookTitle, transactionType,userName,transactionDate);
             }
         
         }

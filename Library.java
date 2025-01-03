@@ -1,4 +1,6 @@
 package com.fsmvu.librarymanagementsistem;
+import static com.fsmvu.librarymanagementsistem.Book.booksInLibrary;
+import static com.fsmvu.librarymanagementsistem.Book.shelf;
 import java.util.Scanner;
 
 public class Library {
@@ -12,101 +14,6 @@ public class Library {
     //create a book list with all added books to the library
     public static final int defaultCapacity=10;
     
-    public static Book[] booksInLibrary = new Book[defaultCapacity];
-    //if we need to add more books to the library we will have to increase the array size
-    //use private keyword because this method will be used only inside this class
-    private void expandLibraryBooksCapacitybyOne(){
-        Book[] newBooksInLibrary= new Book[booksInLibrary.length+1];
-        System.arraycopy(booksInLibrary,0,newBooksInLibrary,0, booksInLibrary.length);
-        booksInLibrary=newBooksInLibrary;
-    }
-    //a method to add a book to the booksInLibrary array
-    private void addToBooksInLibrary(Book book){
-        boolean hasAdded=false;
-        while(!hasAdded){
-            for(int i=0; i<booksInLibrary.length; i++){
-                if( booksInLibrary[i]== null){
-                    booksInLibrary[i]=book;
-                    hasAdded=true;       
-                    break;
-                }
-            }
-            if(!hasAdded)
-                expandLibraryBooksCapacitybyOne();  
-        }
-    }
-    static Book[][] shelf = new Book[10][4];//make this array static to use it in the static method
-
-    private void addBookToLibraryShelves(Book book,int bookCopies){ //make method static to make it object independent   
-        int numberOfIncrements=0;
-        while(bookCopies>0){
-            for(int i=0; i<shelf.length; i++){
-                for(int j=0; j<shelf[i].length;j++){
-                    if(shelf[i][j]==null){
-                        shelf[i][j]=book;
-                        bookCopies--;
-                        if(bookCopies==0){
-                            System.out.printf("\nBuilt %d new shelves to accomodate new books", numberOfIncrements);
-                            System.out.println("copies added to library shelves successfully");
-                            return; //finish after adding all copies of that book
-                        }
-                    }
-                }
-            }
-            if(bookCopies!=0){
-                numberOfIncrements++;
-                //if the compiler reachs this point, that means there is not enough space
-                 increaseShelvesNumber(); 
-            }    
-        }
-    }
-    //to solve the issue that I need to update the left copies number else the method could work endlessly
-    //create a second method with the same name but different parameter to start with
-     private void addBookToLibraryShelves(Book book){
-         
-         addBookToLibraryShelves(book,book.getAvailableCopies());
-     }
-        //since array size cannot be modified I need to create a new array and move the elements if the current array is full 
-    private void increaseShelvesNumber(){
-        Book[][] updatedShelf=new Book[shelf.length+1][shelf[0].length];
-        for(int i=0; i<shelf.length; i++){
-            for(int j=0; j<shelf[i].length;j++){// duplicate elements to the new array
-                updatedShelf[i][j]=shelf[i][j];    
-            }
-        }
-        shelf=updatedShelf;
-        
-    }
-    //edit this method to check both the title and the author name
-    private boolean isBookExistViaTitleAuthorInfo(String bookTitle,String bookAuthor){//search for books
-         for(int i=0; i<booksInLibrary.length; i++){    
-                if(booksInLibrary[i]!=null){
-                    if((booksInLibrary[i].getTitle().equalsIgnoreCase(bookTitle)&&
-                            booksInLibrary[i].getAuthor().equalsIgnoreCase(bookAuthor))){
-                        return true;                        
-                    }
-                }              
-         } 
-         return false;
-    }
-    
-    //write a method that retrun the in index of a book from a given title and author name
-    private int bookIndexViaTitleAuthorInfo(String title,String author){
-        for(int i=0; i<booksInLibrary.length; i++){    
-                if(booksInLibrary[i]!=null){
-                    if(booksInLibrary[i].getTitle().equalsIgnoreCase(title)&&
-                            booksInLibrary[i].getAuthor().equalsIgnoreCase(author)){
-                        return i;                        
-                    }
-                }        
-         } 
-         return -1;    
-    }
-    
-    private void addNewCopies(Book book, int numberOfNewCopies){ 
-        book.addNewCopiesOfaBook(numberOfNewCopies);
-        addBookToLibraryShelves(book, numberOfNewCopies);
-    }
     
     //check if the title and author name are valid
     public static boolean isLetterOrSpace(String text){
@@ -144,11 +51,11 @@ public class Library {
                 System.out.print("Enter Auhor: ");
                 String Author= scan.nextLine().trim();
                 if(isLetterOrSpace(Author)){
-                    if(isBookExistViaTitleAuthorInfo(Title,Author)){
+                    if(Book.isBookExistViaTitleAuthorInfo(Title,Author)){
                         System.out.printf("\nBook already %s by %s exists. Enter how many new copies to add.",Title, Author);
                         int numberOfNewCopies=scan.nextInt();
-                        int index= bookIndexViaTitleAuthorInfo(Title, Author);
-                        addNewCopies(booksInLibrary[index] ,numberOfNewCopies);
+                        int index= Book.bookIndexViaTitleAuthorInfo(Title, Author);
+                        Book.addNewCopies(Book.booksInLibrary[index] ,numberOfNewCopies);
                         return;
                     }else{
                         bookTitle=Title;
@@ -179,27 +86,15 @@ public class Library {
         }
         Book book= new Book(bookTitle, bookAuthor, booksAvailableCopies);
         
-        libraryObj.addBookToLibraryShelves(book);// put the book on the library shelf
-        libraryObj.addToBooksInLibrary(book);
+        book.addBookToLibraryShelves(book);// put the book on the library shelf
+        book.addToBooksInLibrary(book);
         
         System.out.printf("\nBook '%s' by %s has been added with %d copies.",
                 book.getTitle(),book.getAuthor(), book.getAvailableCopies());  
     }
     
     //view shelves to track the current sitution 
-    public void displayShelves(){
-        for(int i=0; i<shelf.length; i++){
-            for(int j=0; j<shelf[i].length;j++){
-                if(shelf[i][j]==null)
-                    return;
-                else
-                    System.out.print(shelf[i][j].getTitle() +" : ");
-                
-            }
-            System.out.println("");
-        }
-    }
-    
+     
     //------------------------REGISTER USERS-------------------------------//
     
     static User[] registeredUsers= new User[defaultCapacity];
@@ -365,14 +260,15 @@ public class Library {
                     String bookTitle= scan.nextLine();
                     System.out.println("\nEnter Author Name: ");
                     String bookAuthor= scan.nextLine();
-                    if(isBookExistViaTitleAuthorInfo(bookTitle, bookAuthor)){
+                    if(Book.isBookExistViaTitleAuthorInfo(bookTitle, bookAuthor)){
                         Book book=returnTheBookViaTitleAuthor(bookTitle, bookAuthor);
                          int availableCopies =book.getAvailableCopies();
                          if(availableCopies>1){
                                 replaceBorrowedBookWithNullFromBookShelves(book);
                                 book.decreaseAvailableCopiesNummByOne();
                                 user.addBooktoUserBookList(book);
-                                Transaction transaction= new Transaction(book,user,"Borrowed");
+                                java.util.Date currentDate=new java.util.Date();
+                                Transaction transaction= new Transaction(book,user,"Borrowed",currentDate);
                                 transaction.addToTransactionRecords(transaction);
                                 System.out.printf("Book '%s' has been borrowed by %s",book.getTitle(),user.getName());
                                 return;
@@ -382,7 +278,8 @@ public class Library {
                                 replaceBorrowedBookWithNullFromBookShelves(book);
                                 book.decreaseAvailableCopiesNummByOne();
                                 user.addBooktoUserBookList(book);
-                                Transaction transaction= new Transaction(book,user,"Borrowed");
+                                java.util.Date currentDate=new java.util.Date();
+                                Transaction transaction= new Transaction(book,user,"Borrowed",currentDate);
                                 transaction.addToTransactionRecords(transaction);
                                 System.out.printf("Book '%s' has been borrowed by %s",book.getTitle(),user.getName());
                                 return;
