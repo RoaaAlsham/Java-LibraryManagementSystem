@@ -1,28 +1,8 @@
-/*o Stores books in shelves.
-▪ Each shelf is represented as a book array and the shelves are represented in an
-array of array of books.
-▪ Each shelf have a capacity of 4 books.
-▪ Books will be searched, borrowed from and returned to these shelves.
-▪ When adding a book, if there is not enough shell space, a new shelf will be
-created by increasing array size.
-o Maintain a list of users, and transactions. Use arrays.
-o Add new book method. Two books can’t have same title and author, add the necessary
-checks here.
-o Register new user method. Two users can’t have same e-mail, add the necessary checks
-here.
-o Handle borrowing and returning books using methods. Ensure a book is available before
-borrowing.
-o Keep track of book availability and user borrowing records in methods.
-o Record all transactions.
-*/
-
 package com.fsmvu.librarymanagementsistem;
-
 import java.util.Scanner;
 
 public class Library {
-    /*
-    use this instance to implement methods (manage the library operation) so it is useful
+    /*use this instance to implement methods (manage the library operation) so it is useful
     to be defined and accessable from eveywhere else I will have to declare all required methods to be static
     */
     public static Library libraryObj= new Library();
@@ -67,9 +47,14 @@ public class Library {
         }
         return true;
     }
-    
     //--------------------------ADDING-NEW-BOOK-------------------------------//
-    
+    //get book title and author with required validations
+    //if the book exist before add new copies
+    //get the number of copies
+    //assign these values to book object's parameters
+    // add the book to the book shelf
+    //add book to books in library list
+    //print a feedback
     public void addNewBook(){
 
         String bookTitle, bookAuthor;
@@ -123,13 +108,15 @@ public class Library {
         book.addBookToLibraryShelves(book);// put the book on the library shelf
         book.addToBooksInLibrary(book);
         
-        System.out.printf("\nBook '%s' by %s has been added with %d copies successfully.",
+        System.out.printf("\nBook '%s' by %s has been added with %d copies successfully.\n",
                 book.getTitle(),book.getAuthor(), book.getAvailableCopies());  
     }
     //view shelves to track the current sitution 
      
     //--------------------------REGISTER-USERS--------------------------------//
-    
+    //get the user name with required checks
+    //get the email and check if it has regiteresd before
+    //add user to regitered users list
     public void registerNewUser(){
         Scanner scan= new Scanner(System.in);
         String name, email;
@@ -156,28 +143,27 @@ public class Library {
                 }
             }
         }
-        
         User user= new User(name, email);
         user.addUsertoRegisteredUsersList(user);
-        System.out.printf("\nUser '%s' has been registered",name);  
+        System.out.printf("\nUser '%s' has been registered\n",name);  
     
     }
     //----------------------------Borrow-a-Book--------------------------------//
-    /*
-        // get the email from the user
+    /* // get the email from the user
             //check if he is registed
                 and check if he can borrow more books
-        //check if there is a copy of the book on the shelves that had not borrowed
-            //decrement the available copies of that book anf=d the total books
-            //add the chosen book to the users book list
+        //check if there is a copy of the book on the shelves
+            //decrement the available copies of that book and the total books
+            //add the chosen book to the user's book list
             //make a method to replace the borrowed book's name on shelf with NULL*/
+            //if that was the only copy left, remove the book from books in library list
             //save the transaction
-    
+            //print a feedback
     public void borrowBook(){
         Scanner scan = new Scanner(System.in);
         // to be continued
         while(true){
-            System.out.println("\nPlease enter your email address before borrowing a book: ");
+            System.out.println("\nPlease enter your email address to access 'borrow a book' feature: ");
             String email= scan.nextLine().trim();
             if(User.hasUserRegisteredBefore(email)){
                 User user= User.returnTheUserViaHisEmail(email);
@@ -207,7 +193,7 @@ public class Library {
                                 java.util.Date currentDate=new java.util.Date();
                                 Transaction transaction= new Transaction(book,user,"Borrowed",currentDate);
                                 transaction.addToTransactionRecords(transaction);
-                                System.out.printf("Book '%s' has been borrowed by %s successfully",book.getTitle(),user.getName());
+                                System.out.printf("Book '%s' has been borrowed by %s successfully\n",book.getTitle(),user.getName());
                                 return;
                          }else if(availableCopies==0){
                                 System.out.println("Sorry, There is no copies of that book left");
@@ -268,7 +254,7 @@ public class Library {
                         java.util.Date currentDate= new java.util.Date();
                         Transaction transaction = new Transaction(book,user,"Returned",currentDate);
                         transaction.addToTransactionRecords(transaction);
-                        System.out.printf("Book '%s' has been return by %s successfully",book.getTitle(),user.getName());
+                        System.out.printf("Book '%s' has been returned by %s successfully\n",book.getTitle(),user.getName());
                         return;  
                     }
                 }else{
@@ -280,7 +266,16 @@ public class Library {
     
     }
     
- //----------------------------------------------------------------------------//   
-    
+ //---------------------DISPLAY-all-BOOKS-in-LIBRARY---------------------------//   
+        public void displayBooksInLibrary(){
+            for(int i=0; i< Book.getBooksInLibrary().length;i++){
+                if(Book.getBooksInLibrary()[i]==null)
+                    continue;
+                System.out.println(Book.getBooksInLibrary()[i].getTitle()+"|:|");
+               
+            }       
+        }
+   
+        
 }
 
