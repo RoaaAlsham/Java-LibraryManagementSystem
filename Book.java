@@ -15,7 +15,8 @@ public class Book {
     private String Author;
     private int AvailableCopies;
     private static int TotalCopies;
-    private static Book[] booksInLibrary = new Book[defaultCapacity];
+
+    private static Book[] booksInLibrary = new Book[defaultCapacity];//create a book list with all added books to the library
     Book(){} //empty constructor
     Book(String Title,String Author,int AvailableCopies){//constructor with parameter to assign to the ibject
         this.Title=Title;
@@ -48,6 +49,10 @@ public class Book {
     public void decreaseAvailableCopiesNummByOne(){
         AvailableCopies--;
         TotalCopies--;
+    }
+    public void increaseAvailableCopiesNummByOne(){
+        AvailableCopies++;
+        TotalCopies++;
     }
     public int getAvailableCopies(){
         return AvailableCopies;
@@ -95,8 +100,8 @@ public class Book {
                         bookCopies--;
                         if(bookCopies==0){
                             System.out.println("copies added to library shelves successfully");
-                            System.out.println((numberOfIncrements!=0)?("Built "+numberOfIncrements+" new shelves to accomodate new books"):" ");
-                            System.out.printf("\nBuilt %d new shelves to accomodate new books", numberOfIncrements);
+                            if(numberOfIncrements!=0)
+                                System.out.printf("Built %d new shelves to accomodate new books",numberOfIncrements);
                             return; //finish after adding all copies of that book
                         }
                     }
@@ -200,10 +205,11 @@ public class Book {
         for(int i=0; i<shelf.length; i++){
             for(int j=0; j<shelf[i].length;j++){
                 if(shelf[i][j]==null)
-                    return;
-                else
-                    System.out.print(shelf[i][j].getTitle() +" : ");
-                
+                    continue;
+                else{
+                    System.out.print("[ ");
+                    System.out.print(shelf[i][j].getTitle() +" ] ");
+                }
             }
             System.out.println("");
         }

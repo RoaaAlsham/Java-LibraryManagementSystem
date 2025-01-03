@@ -27,7 +27,7 @@ public class Library {
     */
     public static Library libraryObj= new Library();
     public static final int defaultCapacity=10;
-    //-------------------------VALIDATIONS--------------------------//
+    //------------------------------VALIDATIONS--------------------------------//
     //check if the title and author name are valid
     public static boolean isLetterOrSpace(String text){
         String upperCaseText=text.toUpperCase();
@@ -68,7 +68,7 @@ public class Library {
         return true;
     }
     
-    //-----------------------ADDING NEW BOOK------------------------//
+    //--------------------------ADDING-NEW-BOOK-------------------------------//
     
     public void addNewBook(){
 
@@ -128,7 +128,7 @@ public class Library {
     }
     //view shelves to track the current sitution 
      
-    //------------------------REGISTER USERS-------------------------------//
+    //--------------------------REGISTER-USERS--------------------------------//
     
     public void registerNewUser(){
         Scanner scan= new Scanner(System.in);
@@ -162,7 +162,7 @@ public class Library {
         System.out.printf("\nUser '%s' has been registered",name);  
     
     }
-    //------------------------Borrow-a-Book--------------------------//
+    //----------------------------Borrow-a-Book--------------------------------//
     /*
         // get the email from the user
             //check if he is registed
@@ -177,7 +177,7 @@ public class Library {
         Scanner scan = new Scanner(System.in);
         // to be continued
         while(true){
-            System.out.println("\nEnter your email address: ");
+            System.out.println("\nPlease enter your email address before borrowing a book: ");
             String email= scan.nextLine().trim();
             if(User.hasUserRegisteredBefore(email)){
                 User user= User.returnTheUserViaHisEmail(email);
@@ -207,7 +207,7 @@ public class Library {
                                 java.util.Date currentDate=new java.util.Date();
                                 Transaction transaction= new Transaction(book,user,"Borrowed",currentDate);
                                 transaction.addToTransactionRecords(transaction);
-                                System.out.printf("Book '%s' has been borrowed by %s",book.getTitle(),user.getName());
+                                System.out.printf("Book '%s' has been borrowed by %s successfully",book.getTitle(),user.getName());
                                 return;
                          }else if(availableCopies==0){
                                 System.out.println("Sorry, There is no copies of that book left");
@@ -233,6 +233,54 @@ public class Library {
         }
     
     }
+  
+//-----------------------------RETURN-a-BOOK----------------------------------//
+//get the email address 
+//return the user instance
+//enter book title and author with neccessary validations
+//return the book 
+//check if the book is exist in user's book list, if not give feedback and return
+//remove the book from the user's book list
+//increase avilable book and total book number
+//add book to the book shelf 
+//if book had only one copy and that copy returned, add this book to booksINLibrary list
+//save the transaction
+//give feedback to the user 
 
+    public void returnBook(){
+        Scanner scan= new Scanner(System.in);
+        while(true){
+            System.out.println("Please enter your email to return a book: ");
+            String inputEmail=scan.nextLine();
+            if(isValidEmail(inputEmail)){
+                User user= User.returnTheUserViaHisEmail(inputEmail);
+                System.out.println("Enter the title of the book the you want to return: ");
+                String bookTitle=scan.nextLine();
+                System.out.println("Enter the author name: ");
+                String bookAuthor=scan.nextLine();
+                Book book=Book.returnTheBookViaTitleAuthor(bookTitle, bookAuthor);
+                if(User.hasUserBorrowedThisBook(book)){
+                    if(user.isBookRemovedFromUserBookList(book)){
+                        book.increaseAvailableCopiesNummByOne();
+                        book.addBookToLibraryShelves(book,1);
+                        if(book.getAvailableCopies()==1)
+                            book.addToBooksInLibrary(book);
+                        java.util.Date currentDate= new java.util.Date();
+                        Transaction transaction = new Transaction(book,user,"Returned",currentDate);
+                        transaction.addToTransactionRecords(transaction);
+                        System.out.printf("Book '%s' has been return by %s successfully",book.getTitle(),user.getName());
+                        return;  
+                    }
+                }else{
+                    System.out.printf("\nIt seems that the user didn't borrow '%s' book ",bookTitle);
+                    return;
+                }
+            }
+        }
+    
+    }
+    
+ //----------------------------------------------------------------------------//   
     
 }
+

@@ -107,4 +107,28 @@ public class User {
         }
         return null;// i hope that we won't reach to this line because i have already checked if the user exist
     }
+    public static boolean hasUserBorrowedThisBook(Book book){
+        for(int i =0; i<userBooks.length;i++){
+            if(userBooks[i]==null)
+                continue;// I have an error will null in operations...
+            if(userBooks[i].equals(book))
+                return true;
+        }
+        return false;
+    }
+    
+    public boolean isBookRemovedFromUserBookList(Book book){
+        
+        for(int i =0; i<userBooks.length;i++){
+            if(userBooks[i]==null)
+                continue;
+            if(userBooks[i].equals(book)){
+                userBooks[i]=null;
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
 }
