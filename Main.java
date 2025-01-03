@@ -15,11 +15,16 @@ public class Main {
     public static void main(String[] args) {
         Library library =new Library();
         library.addNewBook();
-        library.addNewBook();
+        System.out.println("////");
         library.registerNewUser();
-        library.registerNewUser();
-        library.displayShelves();
+        System.out.println("////");
         
+        library.borrowBook();
+        System.out.println("////");
+        
+        library.displayShelves();
+        System.out.println("////");
+        Transaction.displayTransaction();
     }
     
 }

@@ -1,30 +1,10 @@
-/*
-o Stores books in shelves.
-▪ Each shelf is represented as a book array and the shelves are represented in an
-array of array of books.
-▪ Each shelf have a capacity of 4 books.
-▪ Books will be searched, borrowed from and returned to these shelves.
-▪ When adding a book, if there is not enough shell space, a new shelf will be
-created by increasing array size.
-o Maintain a list of users, and transactions. Use arrays.
-o Add new book method. Two books can’t have same title and author, add the necessary
-checks here.
-o Register new user method. Two users can’t have same e-mail, add the necessary checks
-here.
-o Handle borrowing and returning books using methods. Ensure a book is available before
-borrowing.
-o Keep track of book availability and user borrowing records in methods.
-o Record all transactions.
- */
 package com.fsmvu.librarymanagementsistem;
-
 import java.util.Scanner;
 
 public class Library {
     /*
-    // use this instance to implement methods (manage the library operation) 
-    so it is useful to be defined and accessable from eveywhere
-    else I will have to declare all required methods to be static
+    // use this instance to implement methods (manage the library operation) so it is useful
+    to be defined and accessable from eveywhere else I will have to declare all required methods to be static
     */
     public static Library libraryObj= new Library();
     
@@ -33,16 +13,13 @@ public class Library {
     public static final int defaultCapacity=10;
     
     public static Book[] booksInLibrary = new Book[defaultCapacity];
-    
     //if we need to add more books to the library we will have to increase the array size
     //use private keyword because this method will be used only inside this class
     private void expandLibraryBooksCapacitybyOne(){
         Book[] newBooksInLibrary= new Book[booksInLibrary.length+1];
         System.arraycopy(booksInLibrary,0,newBooksInLibrary,0, booksInLibrary.length);
         booksInLibrary=newBooksInLibrary;
- 
     }
-
     //a method to add a book to the booksInLibrary array
     private void addToBooksInLibrary(Book book){
         boolean hasAdded=false;
@@ -58,10 +35,8 @@ public class Library {
                 expandLibraryBooksCapacitybyOne();  
         }
     }
-    
-    
     static Book[][] shelf = new Book[10][4];//make this array static to use it in the static method
-    
+
     private void addBookToLibraryShelves(Book book,int bookCopies){ //make method static to make it object independent   
         int numberOfIncrements=0;
         while(bookCopies>0){
@@ -91,8 +66,7 @@ public class Library {
          
          addBookToLibraryShelves(book,book.getAvailableCopies());
      }
-    
-    //since array size cannot be modified I need to create a new array and move the elements if the current array is full 
+        //since array size cannot be modified I need to create a new array and move the elements if the current array is full 
     private void increaseShelvesNumber(){
         Book[][] updatedShelf=new Book[shelf.length+1][shelf[0].length];
         for(int i=0; i<shelf.length; i++){
@@ -164,11 +138,11 @@ public class Library {
         //write a while loop for every prompt so that user can not move to the next section until they enter a valid input
         while(true){
             System.out.print("\nEnter Book Title: ");
-            String Title= scan.nextLine();
+            String Title= scan.nextLine().trim();//delete extra spaces to avoid mistakes at (.equals) method
             //edit the condition to check if both the tile and the author name is the same
             if(isLetterOrSpace(Title)){
                 System.out.print("Enter Auhor: ");
-                String Author= scan.nextLine();
+                String Author= scan.nextLine().trim();
                 if(isLetterOrSpace(Author)){
                     if(isBookExistViaTitleAuthorInfo(Title,Author)){
                         System.out.printf("\nBook already %s by %s exists. Enter how many new copies to add.",Title, Author);
@@ -235,7 +209,6 @@ public class Library {
         User[] newRegisteredUsers= new User[registeredUsers.length+1];
         System.arraycopy(registeredUsers,0,newRegisteredUsers,0,registeredUsers.length);
         registeredUsers=newRegisteredUsers;
-    
     }
     
     private void addUsertoRegisteredUsersList(User user){
@@ -253,7 +226,6 @@ public class Library {
             }
         }  
     }
-    
     //an email must contain @ sembol with no spaces
     public static boolean isValidEmail(String email){
         if(email.length()<4){
@@ -268,13 +240,10 @@ public class Library {
         }
         if(!email.contains("@")){
             System.out.println("an email address must contain a '@' sembol!");
-            return false;
-            
+            return false;   
         }
         return true;
-   
     }
-    
     //make method to check the user had already registered before or not by checking the email address
     private boolean hasUserRegisteredBefore(String email){
         for(int i=0;i< registeredUsers.length; i++){
@@ -297,18 +266,17 @@ public class Library {
         String name, email;
         while(true){
             System.out.print("\nEnter User Name: ");
-            String inputName=scan.nextLine();
+            String inputName=scan.nextLine().trim();
             if(isLetterOrSpace(inputName)){
                 name=inputName;
                 break;
             }else{
                 System.out.println("\nUser name can only contains letter and spaces");
             }
-       
         }
         while(true){
             System.out.println("Enter you Email: ");
-            String inputEmail=scan.nextLine();
+            String inputEmail=scan.nextLine().trim();
             if(isValidEmail(inputEmail)){
                 if(!hasUserRegisteredBefore(inputEmail)){
                     email=inputEmail;
@@ -334,10 +302,10 @@ public class Library {
             //decrement the available copies of that book anf=d the total books
             //add the chosen book to the users book list
             //make a method to replace the borrowed book's name on shelf with NULL*/
+            //save the transaction
     
     
     // I need to access to further properties of a user by his email so i need a method to return me the user' object
-    
     public static User returnTheUserViaHisEmail(String email){
         for(int i=0;i< registeredUsers.length; i++){
             if(registeredUsers[i]!=null){
@@ -365,7 +333,7 @@ public class Library {
             for(int i=0; i<booksInLibrary.length; i++){
                 if( booksInLibrary[i]== book){
                     booksInLibrary[i]=null;
-                    System.out.println("There are no longer any copies of this book available. Good luck finding the latest copy :)");       
+                    System.out.println("Good luck finding the latest copy. There are no longer any copies of this book available. :)");       
                     break;
                 }
             }
@@ -382,25 +350,14 @@ public class Library {
                 }
             }
         }
-    }//a method to add a book to user's book list
-    private void addToUserBooksList(User user, Book book){
-        Book[] userBookList= user.getUserBookList();
-        for(int i=0; i<userBookList.length; i++){
-            if(userBookList[i]!=null){
-                userBookList[i]=book;
-                System.out.printf("\n %s book added to your book list :)",book.getTitle());
-                return;
-            }
-        }
     }
-    
     
     public void borrowBook(){
         Scanner scan = new Scanner(System.in);
         // to be continued
         while(true){
             System.out.println("\nEnter your email address: ");
-            String email= scan.nextLine();
+            String email= scan.nextLine().trim();
             if(hasUserRegisteredBefore(email)){
                 User user= returnTheUserViaHisEmail(email);
                 if(user.canUserBorrowMore()){
@@ -411,31 +368,29 @@ public class Library {
                     if(isBookExistViaTitleAuthorInfo(bookTitle, bookAuthor)){
                         Book book=returnTheBookViaTitleAuthor(bookTitle, bookAuthor);
                          int availableCopies =book.getAvailableCopies();
-                        switch (availableCopies) {
-                            case 0:
-                                System.out.println("Sorry, There is no copies of that book left");
-                                return;// use return in a void method to terminate it completely
-                        
-                            case 1:
+                         if(availableCopies>1){
+                                replaceBorrowedBookWithNullFromBookShelves(book);
+                                book.decreaseAvailableCopiesNummByOne();
+                                user.addBooktoUserBookList(book);
+                                Transaction transaction= new Transaction(book,user,"Borrowed");
+                                transaction.addToTransactionRecords(transaction);
+                                System.out.printf("Book '%s' has been borrowed by %s",book.getTitle(),user.getName());
+                                return;
+
+                         }else if(availableCopies==1){
                                 replaceBorrowedBookWithNullFromBooksInLibrary(book);//because there is not any copy left
                                 replaceBorrowedBookWithNullFromBookShelves(book);
                                 book.decreaseAvailableCopiesNummByOne();
-                                addToUserBooksList(user, book);
-                                //save this transaction
-                                //print a feedback
-                                
+                                user.addBooktoUserBookList(book);
+                                Transaction transaction= new Transaction(book,user,"Borrowed");
+                                transaction.addToTransactionRecords(transaction);
+                                System.out.printf("Book '%s' has been borrowed by %s",book.getTitle(),user.getName());
                                 return;
-                        
-                            default:
-                                //write a method to remove the book from the libraryShelves
-                                //decreise the number of available copies by one
-                                //add the book to the user's book list
-                                //save this transaction
-                                //print a feedback
-                                
-                                return;
-                        }
-                        
+                         }else if(availableCopies==0){
+                                System.out.println("Sorry, There is no copies of that book left");
+                                return;// use return in a void method to terminate it completely
+                         }
+ 
                     }else{
                         System.out.println("The book is not found in the library");
                         //instruct the user to add a new book

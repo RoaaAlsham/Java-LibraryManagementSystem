@@ -13,7 +13,7 @@ public class Transaction {
     Book book =new Book();
     private String TransactionType;
     java.util.Date date= new java.util.Date();
-    String transactionDate=date.toString();
+    String TransactionDate=date.toString();
     
     Transaction(){}
     
@@ -48,13 +48,13 @@ public class Transaction {
             }
         }
     }
-    public void displayTransaction(){
+    public static void displayTransaction(){
         for(int i=0; i<transactionRecords.length; i++){
             if(transactionRecords[i]!=null){
                 String bookTitle= transactionRecords[i].book.getTitle();
                 String userName= transactionRecords[i].user.getName();
                 String transactionType=transactionRecords[i].TransactionType;
-                String transactionDate=transactionRecords[i].transactionDate;
+                String transactionDate=transactionRecords[i].TransactionDate;
                 System.out.printf("\nThe book %s %s by %s at the following date:\n %s "
                 ,bookTitle,userName, transactionType,transactionDate);
             }

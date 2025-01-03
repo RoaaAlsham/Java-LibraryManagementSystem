@@ -41,5 +41,16 @@ public class User {
     public Book[] getUserBookList(){
         return userBooks;
     }
+    //add a book to user's book list
+    public void addBooktoUserBookList(Book book){
+        for(int i=0;i<userBooks.length;i++){
+            if(userBooks[i]==null){
+                userBooks[i]=book;
+                System.out.println("the book added to user's book successfully");
+                return;
+            }
+        }
+        System.out.println("the book didn't added to user book list, check the code again");
+    }
     
 }
