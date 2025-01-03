@@ -1,20 +1,33 @@
+/*o Stores books in shelves.
+▪ Each shelf is represented as a book array and the shelves are represented in an
+array of array of books.
+▪ Each shelf have a capacity of 4 books.
+▪ Books will be searched, borrowed from and returned to these shelves.
+▪ When adding a book, if there is not enough shell space, a new shelf will be
+created by increasing array size.
+o Maintain a list of users, and transactions. Use arrays.
+o Add new book method. Two books can’t have same title and author, add the necessary
+checks here.
+o Register new user method. Two users can’t have same e-mail, add the necessary checks
+here.
+o Handle borrowing and returning books using methods. Ensure a book is available before
+borrowing.
+o Keep track of book availability and user borrowing records in methods.
+o Record all transactions.
+*/
+
 package com.fsmvu.librarymanagementsistem;
-import static com.fsmvu.librarymanagementsistem.Book.booksInLibrary;
-import static com.fsmvu.librarymanagementsistem.Book.shelf;
+
 import java.util.Scanner;
 
 public class Library {
     /*
-    // use this instance to implement methods (manage the library operation) so it is useful
+    use this instance to implement methods (manage the library operation) so it is useful
     to be defined and accessable from eveywhere else I will have to declare all required methods to be static
     */
     public static Library libraryObj= new Library();
-    
-    //-----------------------ADDING NEW BOOK------------------------//
-    //create a book list with all added books to the library
     public static final int defaultCapacity=10;
-    
-    
+    //-------------------------VALIDATIONS--------------------------//
     //check if the title and author name are valid
     public static boolean isLetterOrSpace(String text){
         String upperCaseText=text.toUpperCase();
@@ -36,8 +49,29 @@ public class Library {
         return true;
     }
     
+    //an email must contain @ sembol with no spaces
+    public static boolean isValidEmail(String email){
+        if(email.length()<4){
+            System.out.println("emails length is insuffient");
+            return false;
+        }
+        for(int i=0; i<email.length(); i++){
+            if(email.charAt(i)==' '){
+                System.out.println("An email cannot contain a space");
+                return false;
+            } 
+        }
+        if(!email.contains("@")){
+            System.out.println("an email address must contain a '@' sembol!");
+            return false;   
+        }
+        return true;
+    }
+    
+    //-----------------------ADDING NEW BOOK------------------------//
+    
     public void addNewBook(){
-        
+
         String bookTitle, bookAuthor;
         int booksAvailableCopies;
         
@@ -46,7 +80,6 @@ public class Library {
         while(true){
             System.out.print("\nEnter Book Title: ");
             String Title= scan.nextLine().trim();//delete extra spaces to avoid mistakes at (.equals) method
-            //edit the condition to check if both the tile and the author name is the same
             if(isLetterOrSpace(Title)){
                 System.out.print("Enter Auhor: ");
                 String Author= scan.nextLine().trim();
@@ -55,7 +88,8 @@ public class Library {
                         System.out.printf("\nBook already %s by %s exists. Enter how many new copies to add.",Title, Author);
                         int numberOfNewCopies=scan.nextInt();
                         int index= Book.bookIndexViaTitleAuthorInfo(Title, Author);
-                        Book.addNewCopies(Book.booksInLibrary[index] ,numberOfNewCopies);
+                        Book existedBook=Book.getBooksInLibrary()[index];
+                        existedBook.addNewCopies(existedBook ,numberOfNewCopies);//come to check this line if something goes wrong
                         return;
                     }else{
                         bookTitle=Title;
@@ -75,7 +109,7 @@ public class Library {
             /*adjust the parameter to be string and then convert the user input
             to int in order to avoid possible problems caused by the mixed use
             of scanner.nextInt and scanner.nextLine sequencely*/
-            String strCopies=scan.nextLine();
+            String strCopies=scan.nextLine().trim();
             if(isNumber(strCopies)){
                 int copiesNumber= Integer.parseInt(strCopies);
                 booksAvailableCopies=copiesNumber;
@@ -89,72 +123,12 @@ public class Library {
         book.addBookToLibraryShelves(book);// put the book on the library shelf
         book.addToBooksInLibrary(book);
         
-        System.out.printf("\nBook '%s' by %s has been added with %d copies.",
+        System.out.printf("\nBook '%s' by %s has been added with %d copies successfully.",
                 book.getTitle(),book.getAuthor(), book.getAvailableCopies());  
     }
-    
     //view shelves to track the current sitution 
      
     //------------------------REGISTER USERS-------------------------------//
-    
-    static User[] registeredUsers= new User[defaultCapacity];
-    
-    //increase the capacity of the array if it is neccessary
-    private void expandNumberOfUsersCapacitybyOn(){
-        User[] newRegisteredUsers= new User[registeredUsers.length+1];
-        System.arraycopy(registeredUsers,0,newRegisteredUsers,0,registeredUsers.length);
-        registeredUsers=newRegisteredUsers;
-    }
-    
-    private void addUsertoRegisteredUsersList(User user){
-        boolean hasAdded=false;
-        while(!hasAdded){
-            for(int i=0; i< registeredUsers.length; i++){
-                if(registeredUsers[i]==null){
-                    registeredUsers[i]= user;
-                    hasAdded= true;
-                    return;
-                }
-            }
-            if(!hasAdded){
-                expandNumberOfUsersCapacitybyOn();
-            }
-        }  
-    }
-    //an email must contain @ sembol with no spaces
-    public static boolean isValidEmail(String email){
-        if(email.length()<4){
-            System.out.println("emails length is insuffient");
-            return false;
-        }
-        for(int i=0; i<email.length(); i++){
-            if(email.charAt(i)==' '){
-                System.out.println("An email cannot contain a space");
-                return false;
-            } 
-        }
-        if(!email.contains("@")){
-            System.out.println("an email address must contain a '@' sembol!");
-            return false;   
-        }
-        return true;
-    }
-    //make method to check the user had already registered before or not by checking the email address
-    private boolean hasUserRegisteredBefore(String email){
-        for(int i=0;i< registeredUsers.length; i++){
-            if(registeredUsers[i]==null){
-                return false;
-            }else{
-                if(registeredUsers[i].getEmail().equals(email)){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
-    
-    
     
     public void registerNewUser(){
         Scanner scan= new Scanner(System.in);
@@ -170,10 +144,10 @@ public class Library {
             }
         }
         while(true){
-            System.out.println("Enter you Email: ");
+            System.out.println("Enter your Email: ");
             String inputEmail=scan.nextLine().trim();
             if(isValidEmail(inputEmail)){
-                if(!hasUserRegisteredBefore(inputEmail)){
+                if(!User.hasUserRegisteredBefore(inputEmail)){
                     email=inputEmail;
                     break;
                 }else{
@@ -184,7 +158,7 @@ public class Library {
         }
         
         User user= new User(name, email);
-        addUsertoRegisteredUsersList(user);
+        user.addUsertoRegisteredUsersList(user);
         System.out.printf("\nUser '%s' has been registered",name);  
     
     }
@@ -199,72 +173,24 @@ public class Library {
             //make a method to replace the borrowed book's name on shelf with NULL*/
             //save the transaction
     
-    
-    // I need to access to further properties of a user by his email so i need a method to return me the user' object
-    public static User returnTheUserViaHisEmail(String email){
-        for(int i=0;i< registeredUsers.length; i++){
-            if(registeredUsers[i]!=null){
-                if(registeredUsers[i].getEmail().equals(email)){
-                    return registeredUsers[i];
-                        }
-                   }     
-        }
-        return null;// i hope that we won't reach to this line because i have already checked if the user exist
-    }
-    // I need to return the book to access the available copies
-    public static Book returnTheBookViaTitleAuthor(String title, String Author){
-        for(int i=0; i<booksInLibrary.length; i++){
-            if(booksInLibrary[i]!=null){
-                if(booksInLibrary[i].getTitle().equalsIgnoreCase(title)&&
-                        booksInLibrary[i].getTitle().equalsIgnoreCase(title)){
-                    return booksInLibrary[i];
-                }
-            }
-        }
-        return null;
-    }
-    //write a method to remove the book from the book list
-    private void replaceBorrowedBookWithNullFromBooksInLibrary(Book book){
-            for(int i=0; i<booksInLibrary.length; i++){
-                if( booksInLibrary[i]== book){
-                    booksInLibrary[i]=null;
-                    System.out.println("Good luck finding the latest copy. There are no longer any copies of this book available. :)");       
-                    break;
-                }
-            }
-    }
-    
-    //write a method to remove a copy of a book from the book shelf(replace with null)
-    private void replaceBorrowedBookWithNullFromBookShelves(Book book){
-        for(int i=0; i< shelf.length;i++){
-            for(int j=0;j<shelf[i].length; j++){
-                if(shelf[i][j]==book){
-                    shelf[i][j]=null;
-                    System.out.println("a copy of the book removed from the book shelf");
-                    return;
-                }
-            }
-        }
-    }
-    
     public void borrowBook(){
         Scanner scan = new Scanner(System.in);
         // to be continued
         while(true){
             System.out.println("\nEnter your email address: ");
             String email= scan.nextLine().trim();
-            if(hasUserRegisteredBefore(email)){
-                User user= returnTheUserViaHisEmail(email);
+            if(User.hasUserRegisteredBefore(email)){
+                User user= User.returnTheUserViaHisEmail(email);
                 if(user.canUserBorrowMore()){
                     System.out.println("\nEnter Book Title: ");
                     String bookTitle= scan.nextLine();
                     System.out.println("\nEnter Author Name: ");
                     String bookAuthor= scan.nextLine();
                     if(Book.isBookExistViaTitleAuthorInfo(bookTitle, bookAuthor)){
-                        Book book=returnTheBookViaTitleAuthor(bookTitle, bookAuthor);
+                        Book book=Book.returnTheBookViaTitleAuthor(bookTitle, bookAuthor);
                          int availableCopies =book.getAvailableCopies();
                          if(availableCopies>1){
-                                replaceBorrowedBookWithNullFromBookShelves(book);
+                                book.replaceBorrowedBookWithNullFromBookShelves(book);
                                 book.decreaseAvailableCopiesNummByOne();
                                 user.addBooktoUserBookList(book);
                                 java.util.Date currentDate=new java.util.Date();
@@ -274,8 +200,8 @@ public class Library {
                                 return;
 
                          }else if(availableCopies==1){
-                                replaceBorrowedBookWithNullFromBooksInLibrary(book);//because there is not any copy left
-                                replaceBorrowedBookWithNullFromBookShelves(book);
+                                book.replaceBorrowedBookWithNullFromBooksInLibrary(book);//because there is not any copy left
+                                book.replaceBorrowedBookWithNullFromBookShelves(book);
                                 book.decreaseAvailableCopiesNummByOne();
                                 user.addBooktoUserBookList(book);
                                 java.util.Date currentDate=new java.util.Date();
@@ -307,6 +233,6 @@ public class Library {
         }
     
     }
-    
+
     
 }

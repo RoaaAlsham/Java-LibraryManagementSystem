@@ -14,8 +14,8 @@ public class Book {
     private String Title;
     private String Author;
     private int AvailableCopies;
-    static int TotalCopies;
-    
+    private static int TotalCopies;
+    private static Book[] booksInLibrary = new Book[defaultCapacity];
     Book(){} //empty constructor
     Book(String Title,String Author,int AvailableCopies){//constructor with parameter to assign to the ibject
         this.Title=Title;
@@ -52,8 +52,14 @@ public class Book {
     public int getAvailableCopies(){
         return AvailableCopies;
     }
+    public int getTotalCopies(){
+        return TotalCopies;
+    }
+    public static Book[] getBooksInLibrary(){
+        return booksInLibrary;
+    }
     
-    public static Book[] booksInLibrary = new Book[defaultCapacity];
+    
     //if we need to add more books to the library we will have to increase the array size
     //use private keyword because this method will be used only inside this class
     public static void expandLibraryBooksCapacitybyOne(){
@@ -62,7 +68,7 @@ public class Book {
         booksInLibrary=newBooksInLibrary;
     }
     //a method to add a book to the booksInLibrary array
-    public static boolean addToBooksInLibrary(Book book){
+    public boolean addToBooksInLibrary(Book book){
         boolean hasAdded=false;
         while(!hasAdded){
             for(int i=0; i<booksInLibrary.length; i++){
@@ -79,7 +85,7 @@ public class Book {
     }
     static Book[][] shelf = new Book[10][4];//make this array static to use it in the static method
 
-    public static void addBookToLibraryShelves(Book book,int bookCopies){ //make method static to make it object independent   
+    public void addBookToLibraryShelves(Book book,int bookCopies){ //make method static to make it object independent   
         int numberOfIncrements=0;
         while(bookCopies>0){
             for(int i=0; i<shelf.length; i++){
@@ -105,7 +111,7 @@ public class Book {
     }
     //to solve the issue that I need to update the left copies number else the method could work endlessly
     //create a second method with the same name but different parameter to start with
-     public static void addBookToLibraryShelves(Book book){
+     public void addBookToLibraryShelves(Book book){
          
          addBookToLibraryShelves(book,book.getAvailableCopies());
      }
@@ -146,10 +152,49 @@ public class Book {
          return -1;    
     }
     
-    public static void addNewCopies(Book book, int numberOfNewCopies){ 
+    public void addNewCopies(Book book, int numberOfNewCopies){ 
         book.addNewCopiesOfaBook(numberOfNewCopies);
         addBookToLibraryShelves(book, numberOfNewCopies);
     }
+    
+    // I need to return the book to access the available copies
+    public static Book returnTheBookViaTitleAuthor(String title, String Author){
+        for(int i=0; i<booksInLibrary.length; i++){
+            if(booksInLibrary[i]!=null){
+                if(booksInLibrary[i].getTitle().equalsIgnoreCase(title)&&
+                        booksInLibrary[i].getTitle().equalsIgnoreCase(title)){
+                    return booksInLibrary[i];
+                }
+            }
+        }
+        return null;
+    }
+    
+    //write a method to remove the book from the book list
+    public void replaceBorrowedBookWithNullFromBooksInLibrary(Book book){
+            for(int i=0; i<booksInLibrary.length; i++){
+                if( booksInLibrary[i]== book){
+                    booksInLibrary[i]=null;
+                    System.out.println("Good luck finding the latest copy. There are no longer any copies of this book available. :)");       
+                    break;
+                }
+            }
+    }
+    
+    //write a method to remove a copy of a book from the book shelf(replace with null)
+    public void replaceBorrowedBookWithNullFromBookShelves(Book book){
+        for(int i=0; i< shelf.length;i++){
+            for(int j=0;j<shelf[i].length; j++){
+                if(shelf[i][j]==book){
+                    shelf[i][j]=null;
+                    System.out.println("a copy of the book removed from the book shelf");
+                    return;
+                }
+            }
+        }
+    }
+    
+    
     
     public static void displayShelves(){
         for(int i=0; i<shelf.length; i++){
@@ -164,6 +209,7 @@ public class Book {
         }
     }
    
+    
     
 }
 
