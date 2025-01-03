@@ -321,6 +321,17 @@ public class Library {
         System.out.printf("\nUser '%s' has been registered",name);  
     
     }
+    //------------------------Borrow-a-Book--------------------------//
+    /*
+        // get the email from the user
+            //check if he is registed
+                and check if he can borrow more books
+        //check if there is a copy of the book on the shelves that had not borrowed
+            //decrement the available copies of that book anf=d the total books
+            //add the chosen book to the users book list
+            //make a method to replace the borrowed book's name on shelf with NULL*/
+    
+    
     // I need to access to further properties of a user by his email so i need a method to return me the user' object
     public static User returnTheUserViaHisEmail(String email){
         for(int i=0;i< registeredUsers.length; i++){
@@ -330,23 +341,20 @@ public class Library {
                         }
                    }     
         }
-        return null;// i hope that we won't reach to this line because i hav already checked if the user exist
+        return null;// i hope that we won't reach to this line because i have already checked if the user exist
     }
-    
-    //------------------------Borrow-a-Book--------------------------//
-    /*
-        // get the email from the user
-            //check if he is registed
-                and check if he can borrow more books
-        //check if there is a copy of the book on the shelves that had not borrowed
-            //decrement the available copies of that book anf=d the total books
-            //add the chosen book to the users book list
-    
-            //make a method to replace the borrowed book's name on shelf with NULL
-            
-    
-    */
-    //create a method to check if the user has registered
+    // I need to return the book to access the available copies
+    public static Book returnTheBookViaTitleAuthor(String title, String Author){
+        for(int i=0; i<booksInLibrary.length; i++){
+            if(booksInLibrary[i]!=null){
+                if(booksInLibrary[i].getTitle().equalsIgnoreCase(title)&&
+                        booksInLibrary[i].getTitle().equalsIgnoreCase(title)){
+                    return booksInLibrary[i];
+                }
+            }
+        }
+        return null;
+    }
     
     
     
@@ -354,13 +362,46 @@ public class Library {
         Scanner scan = new Scanner(System.in);
         // to be continued
         while(true){
-            System.out.println("Enter your email address: ");
+            System.out.println("\nEnter your email address: ");
             String email= scan.nextLine();
             if(hasUserRegisteredBefore(email)){
                 
                 if(returnTheUserViaHisEmail(email).canUserBorrowMore()){
-                    System.out.println("Enter Book Title: ");
-                    //continue from here...
+                    System.out.println("\nEnter Book Title: ");
+                    String bookTitle= scan.nextLine();
+                    System.out.println("\nEnter Author Name: ");
+                    String bookAuthor= scan.nextLine();
+                    if(isBookExistViaTitleAuthorInfo(bookTitle, bookAuthor)){
+                         int availableCopies =returnTheBookViaTitleAuthor(bookTitle, bookAuthor).getAvailableCopies();
+                        switch (availableCopies) {
+                            case 0:
+                                System.out.println("Sorry, There is no copies of that book left");
+                                return;
+                        
+                            case 1:
+                                //write a method to remove the book from the book list
+                                //write a method to remove the book from the libraryShelves
+                                //decreise the number of available copies by one
+                                //add the book to the user's book list
+                                //save this transaction
+                                //print a feedback
+                                
+                                return;
+                        
+                            default:
+                                //write a method to remove the book from the libraryShelves
+                                //decreise the number of available copies by one
+                                //add the book to the user's book list
+                                //save this transaction
+                                //print a feedback
+                                
+                                return;
+                        }
+                    }else{
+                        System.out.println("The book is not found in the library");
+                        //instruct the user to add a new book
+                    }
+                    
                 }else{
                     System.out.println("You have reached the maximum borrow limit.(three books at a time)");
                     return;
@@ -368,7 +409,7 @@ public class Library {
                 }
                 
             }else{
-                System.out.println("please register the user before borrowong a book");
+                System.out.println("please register the user before borrowing a book");
                 return;
                 // Instruct the user to log in
             }
