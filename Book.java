@@ -67,7 +67,7 @@ public class Book {
     
     //if we need to add more books to the library we will have to increase the array size
     //use private keyword because this method will be used only inside this class
-    public static void expandLibraryBooksCapacitybyOne(){
+    private void expandLibraryBooksCapacitybyOne(){
         Book[] newBooksInLibrary= new Book[booksInLibrary.length+1];
         System.arraycopy(booksInLibrary,0,newBooksInLibrary,0, booksInLibrary.length);
         booksInLibrary=newBooksInLibrary;
@@ -121,7 +121,7 @@ public class Book {
          addBookToLibraryShelves(book,book.getAvailableCopies());
      }
         //since array size cannot be modified I need to create a new array and move the elements if the current array is full 
-    public static void increaseShelvesNumber(){
+    private void increaseShelvesNumber(){
         Book[][] updatedShelf=new Book[shelf.length+1][shelf[0].length];
         for(int i=0; i<shelf.length; i++){
             for(int j=0; j<shelf[i].length;j++){// duplicate elements to the new array

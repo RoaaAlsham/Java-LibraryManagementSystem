@@ -9,24 +9,21 @@ package com.fsmvu.librarymanagementsistem;
 import static com.fsmvu.librarymanagementsistem.Library.defaultCapacity;
 
 public class Transaction {
-    User user = new User();
-    Book book =new Book();
+    private User user = new User();
+    private Book book =new Book();
     private String TransactionType;
-    java.util.Date date= new java.util.Date();
+    private java.util.Date date= new java.util.Date();
+    static Transaction[] transactionRecords= new Transaction[defaultCapacity];
     
-    
-    Transaction(){}
-    
+ 
     Transaction(Book book, User user, String TransactionType, java.util.Date currentDate){//transaction contructor
         this.book= book;
         this.user=user;
         this.TransactionType=TransactionType;
-        date=currentDate;
+        this.date=currentDate;
     }
-    
-    static Transaction[] transactionRecords= new Transaction[defaultCapacity];
-    
-    public void expandTransactionRecordsListByOne(){
+  
+    private void expandTransactionRecordsListByOne(){
         Transaction[] newTransactionRecords=new Transaction[transactionRecords.length+1];
         System.arraycopy(transactionRecords,0, newTransactionRecords,0,transactionRecords.length);
         transactionRecords=newTransactionRecords;

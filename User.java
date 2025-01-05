@@ -10,7 +10,8 @@ import static com.fsmvu.librarymanagementsistem.Library.defaultCapacity;
 public class User {
     private String Name;
     private String Email;
-    private static Book[] userBooks= new Book[3];
+    private static Book[] userBooks= new Book[3];//I need it to be static to use it in (public static boolean hasUserBorrowedThisBook(Book book))
+    public static User[] registeredUsers= new User[defaultCapacity];
     
     User(String Name, String Email){
         this.Name= Name;
@@ -57,7 +58,7 @@ public class User {
         System.out.println("the book didn't added to user book list, check the code again");
     }
     
-    public static User[] registeredUsers= new User[defaultCapacity];
+    
     
     //increase the capacity of the array if it is neccessary
     private void expandNumberOfUsersCapacitybyOn(){
@@ -130,7 +131,5 @@ public class User {
         return false;
     }
     
-    
-    
-    
+ 
 }
