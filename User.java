@@ -131,5 +131,14 @@ public class User {
         return false;
     }
     
+    //display users borrowed books 
+    public void displayUsersBorrowedBooks(User user){
+        for(int i=0; i< user.getUserBookList().length; i++){
+            if(user.getUserBookList()[i]!=null){
+                System.out.print(user.getUserBookList()[i].getTitle()+" :: ");
+            }  
+        }
+    }
+    
  
 }

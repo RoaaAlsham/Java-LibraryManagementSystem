@@ -17,13 +17,14 @@ public class Main {
                            5. Display all Books
                            6. View Transactions
                            7. View Bookshelf
-                           8. Exit
+                           8. Display User's Borrowed Books
+                           9. Exit
                            _____________________________
                        
                            """);
         System.out.println("Enter the corresponding number of the method you want to use ");
         int input= scan.nextInt();
-        while(input!=8){
+        while(input!=9){
         
             switch(input){
                 case 1:
@@ -47,9 +48,12 @@ public class Main {
                 case 7:
                     Book.displayShelves();
                     break;
-                
+                case 8:
+                    libraryObj.displayUserBooks();
+                    break;
+                    
                 default:
-                    System.out.println("please enter a number between 1 and 7 to use the program 😉");
+                    System.out.println("please enter a number between 1 and 8 to use the program 😉");
 
             }
              System.out.println("");
@@ -64,7 +68,8 @@ public class Main {
                            5. Display all Books
                            6. View Transactions
                            7. View Bookshelf
-                           8. Exit
+                           8. Display User's Borrowed Books
+                           9. Exit
                            _____________________________
                        
                            """);

@@ -237,29 +237,40 @@ public class Library {
         Scanner scan= new Scanner(System.in);
         while(true){
             System.out.println("Please enter your email to return a book: ");
-            String inputEmail=scan.nextLine();
-            if(isValidEmail(inputEmail)){
+            String inputEmail=scan.nextLine().trim();
+            if(isValidEmail(inputEmail)&&User.hasUserRegisteredBefore(inputEmail)){
                 User user= User.returnTheUserViaHisEmail(inputEmail);
                 System.out.println("Enter the title of the book the you want to return: ");
                 String bookTitle=scan.nextLine();
                 System.out.println("Enter the author name: ");
                 String bookAuthor=scan.nextLine();
+
                 Book book=Book.returnTheBookViaTitleAuthor(bookTitle, bookAuthor);
+                //if there was only one copy whan the user borrowed it , this funtion wo'nt work.Add an if statement to handle this sitution
+                if (book==null){
+                    book=new Book(bookTitle, bookAuthor,1);
+                    book.addBookToLibraryShelves(book);// put the book on the library shelf
+                    book.addToBooksInLibrary(book);
+                    
+                    java.util.Date currentDate= new java.util.Date();
+                    Transaction transaction = new Transaction(book,user,"Returned",currentDate);
+                    transaction.addToTransactionRecords(transaction);
+                    System.out.printf("Book '%s' has been returned by %s successfully\n",book.getTitle(),user.getName());
+                    return;  
+                }
                 if(User.hasUserBorrowedThisBook(book)){
                     if(user.isBookRemovedFromUserBookList(book)){
                         book.increaseAvailableCopiesNummByOne();
                         book.addBookToLibraryShelves(book,1);
-                        if(book.getAvailableCopies()==1)
-                            book.addToBooksInLibrary(book);
                         java.util.Date currentDate= new java.util.Date();
                         Transaction transaction = new Transaction(book,user,"Returned",currentDate);
                         transaction.addToTransactionRecords(transaction);
                         System.out.printf("Book '%s' has been returned by %s successfully\n",book.getTitle(),user.getName());
                         return;  
                     }
-                }else{
-                    System.out.printf("\nIt seems that the user didn't borrow '%s' book ",bookTitle);
-                    return;
+            }else{
+                System.out.printf("\nIt seems that the user didn't borrow '%s' book ",bookTitle);
+                return;
                 }
             }
         }
@@ -275,7 +286,29 @@ public class Library {
                
             }       
         }
-   
+//----------------------Display-user's-book-list------------------------------//
+
+    public void displayUserBooks(){
+        Scanner scan= new Scanner(System.in);
+        while(true){
+            System.out.println("Please enter your email to display your books: ");
+            String inputEmail=scan.nextLine();
+            if(isValidEmail(inputEmail)){
+                if(User.hasUserRegisteredBefore(inputEmail)){
+                    User user= User.returnTheUserViaHisEmail(inputEmail);
+                    user.displayUsersBorrowedBooks(user);
+                    return;
+                }else{
+                    System.out.println("please register the user before accessing this feature");
+                }
+               
+            }else{
+                System.out.println("your email is not valid");
+                return;
+            }
         
+        }
+    }
+//-----------------------------------------------------------------------------//        
 }
 
